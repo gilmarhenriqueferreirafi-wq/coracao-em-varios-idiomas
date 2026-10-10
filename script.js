@@ -87,7 +87,7 @@ function showHeart(name, phraseList) {
   let phraseIndex = 0;
   const lowerTipStart = centerY + scale * 0.62;
 
-  for (let y = centerY - 17 * scale; y <= centerY + 17 * scale; y += 23) {
+  for (let y = centerY - 17 * scale; y <= centerY + 17 * scale; y += 19) {
     for (const [rawLeft, rawRight] of heartSpans(y, scale, centerX, centerY)) {
       const spans = y > cardTop && y < cardBottom
         ? [[rawLeft, Math.min(rawRight, cardLeft)], [Math.max(rawLeft, cardRight), rawRight]]
