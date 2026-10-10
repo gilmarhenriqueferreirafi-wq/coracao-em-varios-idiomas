@@ -134,7 +134,7 @@ function showHeart(name, phraseList, options) {
 
   const width = stage.clientWidth;
   const height = stage.clientHeight;
-  const isMobile = width < 650;
+  const isMobile = width < 650 || /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent);
   const scale = Math.min(width / (isMobile ? 27 : 30), height / 30);
   const rowGap = isMobile ? 15 : 19;
   const wordGap = isMobile ? 6 : 14;
