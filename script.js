@@ -4,48 +4,19 @@ const phrases = [
   "我爱你", "Σ' αγαπώ", "Seni seviyorum", "أحبك"
 ];
 
-function insideHeart(x, y) {
-  return Math.pow(x * x + y * y - 1, 3) - x * x * Math.pow(y, 3) <= 0;
-}
-
-function heartPoints() {
-  const points = [];
-  let phraseIndex = 0;
-
-  for (let y = 1.12; y >= -1.22; y -= 0.15) {
-    const spans = [];
-    let start = null;
-
-    for (let x = -1.5; x <= 1.5; x += 0.01) {
-      const inside = insideHeart(x, y);
-      if (inside && start === null) start = x;
-      if ((!inside || x >= 1.49) && start !== null) {
-        spans.push([start, inside && x >= 1.49 ? x : x - 0.01]);
-        start = null;
-      }
-    }
-
-    for (const [left, right] of spans) {
-      // Abre espaço para o cartão central sem deixar texto por baixo dele.
-      const pieces = Math.abs(y) < 0.3
-        ? [[left, Math.min(right, -0.5)], [Math.max(left, 0.5), right]]
-        : [[left, right]];
-
-      for (const [pieceLeft, pieceRight] of pieces) {
-        if (pieceRight - pieceLeft < 0.2) continue;
-        let cursor = pieceLeft + 0.02;
-        while (cursor < pieceRight - 0.12) {
-          const phrase = phrases[phraseIndex++ % phrases.length];
-          const width = Math.max(0.19, phrase.length * 0.018);
-          if (cursor + width > pieceRight) break;
-          points.push({ x: cursor + width / 2, y, phrase });
-          cursor += width + 0.08;
-        }
-      }
-    }
-  }
-  return points;
-}
+// Posições fixas deixam uma folga real entre frases de tamanhos diferentes.
+const heartLayout = [
+  [18, [39, 61]],
+  [25, [33, 43, 57, 67]],
+  [32, [28, 38, 48, 52, 62, 72]],
+  [39, [25, 35, 45, 55, 65, 75]],
+  [46, [24, 34, 44, 56, 66, 76]],
+  [53, [26, 36, 46, 54, 64, 74]],
+  [60, [30, 40, 50, 60, 70]],
+  [67, [36, 46, 56, 66]],
+  [74, [43, 57]],
+  [81, [50]]
+];
 
 function show404() {
   document.title = "404 — Nome não encontrado";
@@ -63,13 +34,15 @@ function showHeart(name) {
   stage.className = "stage";
 
   let index = 0;
-  for (const point of heartPoints()) {
+  for (const [top, positions] of heartLayout) {
+    for (const left of positions) {
     const word = document.createElement("span");
     word.className = "heart-word";
-    word.textContent = point.phrase || phrases[index++ % phrases.length];
-    word.style.left = `${50 + point.x * 31}%`;
-    word.style.top = `${50 - point.y * 35}%`;
+    word.textContent = phrases[index++ % phrases.length];
+    word.style.left = `${left}%`;
+    word.style.top = `${top}%`;
     stage.appendChild(word);
+    }
   }
 
   const card = document.createElement("div");

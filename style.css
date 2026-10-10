@@ -28,7 +28,7 @@ body {
   position: absolute;
   z-index: 1;
   color: var(--pink);
-  font-size: clamp(0.62rem, 1.15vw, 0.9rem);
+  font-size: clamp(0.55rem, 0.9vw, 0.75rem);
   font-weight: 700;
   white-space: nowrap;
   transform: translate(-50%, -50%);
