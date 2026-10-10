@@ -85,6 +85,7 @@ function showHeart(name, phraseList) {
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d");
   let phraseIndex = 0;
+  const lowerTipStart = centerY + scale * 0.62;
 
   for (let y = centerY - 17 * scale; y <= centerY + 17 * scale; y += 23) {
     for (const [rawLeft, rawRight] of heartSpans(y, scale, centerX, centerY)) {
@@ -125,7 +126,7 @@ function showHeart(name, phraseList) {
         }
 
         // Completa as pontas estreitas dos lobos sem forçar uma frase a caber.
-        if (!placed && right - left > 8) {
+        if (!placed && right - left > 8 && y < lowerTipStart) {
           const accent = document.createElement("span");
           accent.className = "heart-word heart-accent";
           accent.textContent = "♥";
@@ -136,6 +137,13 @@ function showHeart(name, phraseList) {
       }
     }
   }
+
+  const tip = document.createElement("span");
+  tip.className = "heart-word heart-accent";
+  tip.textContent = "♥";
+  tip.style.left = `${centerX}px`;
+  tip.style.top = `${centerY + scale * 15.5}px`;
+  stage.appendChild(tip);
 }
 
 const name = new URLSearchParams(window.location.search).get("nome")?.trim();
