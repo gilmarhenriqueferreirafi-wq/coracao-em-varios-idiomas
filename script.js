@@ -42,7 +42,7 @@ function showHeart(name) {
       word.className = "heart-word";
       word.textContent = phrases[index++ % phrases.length];
       word.style.left = `${50 + (x / 7.2)}%`;
-      word.style.top = `${50 + (y / 5.2)}%`;
+      word.style.top = `${50 + (y / 4.8)}%`;
       stage.appendChild(word);
     }
   }

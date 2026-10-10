@@ -19,9 +19,9 @@ body {
 
 .stage {
   position: relative;
-  width: min(94vw, 980px);
-  height: min(86vh, 650px);
-  margin: 7vh auto;
+  width: min(88vw, 760px);
+  height: min(82vh, 680px);
+  margin: 4vh auto;
 }
 
 .heart-word {
@@ -40,8 +40,8 @@ body {
   z-index: 3;
   left: 50%;
   top: 50%;
-  width: min(25vw, 250px);
-  min-width: 180px;
+  width: min(32vw, 285px);
+  min-width: 220px;
   min-height: 130px;
   display: grid;
   place-items: center;
@@ -55,9 +55,10 @@ body {
 
 .name-card span {
   color: white;
-  font-size: clamp(1.3rem, 3vw, 2.3rem);
+  font-size: clamp(1.15rem, 3vw, 2.15rem);
   font-weight: 800;
   text-align: center;
+  white-space: nowrap;
   overflow-wrap: anywhere;
 }
 
@@ -79,6 +80,6 @@ body {
 @media (max-width: 650px) {
   .stage { width: 100vw; height: 72vh; margin-top: 12vh; }
   .heart-word { font-size: 0.55rem; }
-  .name-card { min-width: 145px; width: 34vw; min-height: 100px; padding: 14px; }
+  .name-card { min-width: 145px; width: 42vw; min-height: 100px; padding: 14px; }
 }
 
