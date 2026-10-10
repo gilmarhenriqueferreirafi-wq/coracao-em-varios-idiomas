@@ -137,23 +137,23 @@ function showHeart(name, phraseList, options) {
 
   const width = stage.clientWidth;
   const height = stage.clientHeight;
-  const isInstagram = /Instagram/i.test(navigator.userAgent);
+  const compactInstagram = false;
   const isMobile = width < 650 || /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent);
   const batchSize = 30;
   const page = window.__heartPage || 0;
-  const displayPhrases = isInstagram
+  const displayPhrases = compactInstagram
     ? phraseList.slice((page * batchSize) % phraseList.length, ((page * batchSize) % phraseList.length) + batchSize)
     : phraseList;
   const visiblePhrases = displayPhrases.length ? displayPhrases : phraseList.slice(0, batchSize);
-  const scaleX = Math.min(width / (isInstagram ? 36 : isMobile ? 32 : 30), height / 30);
+  const scaleX = Math.min(width / (compactInstagram ? 36 : isMobile ? 32 : 30), height / 30);
   const scaleY = scaleX;
-  const rowGap = isInstagram ? 22 : 19;
+  const rowGap = compactInstagram ? 22 : 19;
   const wordGap = 6;
-  const preferredFontSize = isInstagram ? Math.min(options.fontSize, 7) : isMobile ? Math.min(options.fontSize, 9) : options.fontSize;
+  const preferredFontSize = compactInstagram ? Math.min(options.fontSize, 7) : isMobile ? Math.min(options.fontSize, 9) : options.fontSize;
   const centerX = width / 2;
   const centerY = height / 2 + 18;
   const cardCenterY = isMobile ? centerY + 1.75 * scaleY : centerY;
-  if (isMobile && !isInstagram) card.style.top = `${cardCenterY}px`;
+  if (isMobile && !compactInstagram) card.style.top = `${cardCenterY}px`;
   const cardLeft = centerX - card.offsetWidth / 2 - 12;
   const cardRight = centerX + card.offsetWidth / 2 + 12;
   const cardTop = cardCenterY - card.offsetHeight / 2 - 10;
@@ -169,7 +169,7 @@ function showHeart(name, phraseList, options) {
         : [[rawLeft, rawRight]];
 
       for (const [left, right] of spans) {
-        if (isInstagram) {
+        if (compactInstagram) {
           if (phraseIndex >= visiblePhrases.length) break;
 
           const phrase = visiblePhrases[phraseIndex++];
@@ -195,8 +195,8 @@ function showHeart(name, phraseList, options) {
 
         let cursor = left + 7;
         let placedInSpan = false;
-        while (cursor < right - 7 && (!isInstagram || !placedInSpan)) {
-          if (isInstagram && phraseIndex >= visiblePhrases.length) break;
+        while (cursor < right - 7 && (!compactInstagram || !placedInSpan)) {
+          if (compactInstagram && phraseIndex >= visiblePhrases.length) break;
           let phrase = visiblePhrases[phraseIndex++ % visiblePhrases.length];
           let fontSize = preferredFontSize;
           context.font = `700 ${fontSize}px Arial`;
@@ -243,7 +243,7 @@ function showHeart(name, phraseList, options) {
     animateElement(card, 4.7, 800);
   }
 
-  if (isInstagram && phraseList.length > batchSize) {
+  if (compactInstagram && phraseList.length > batchSize) {
     clearTimeout(window.__heartCycleTimer);
     window.__heartCycleTimer = setTimeout(() => {
       window.__heartPage = (page + 1) % Math.ceil(phraseList.length / batchSize);
