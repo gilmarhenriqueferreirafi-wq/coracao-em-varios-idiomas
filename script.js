@@ -80,6 +80,7 @@ function showHeart(name) {
 
       for (const [left, right] of spans) {
         let cursor = left + 7;
+        let placed = false;
         while (cursor < right - 7) {
           let phrase = phrases[phraseIndex++ % phrases.length];
           let fontSize = 12;
@@ -88,6 +89,11 @@ function showHeart(name) {
 
           if (cursor + phraseWidth > right - 7) {
             fontSize = 10;
+            context.font = `700 ${fontSize}px Arial`;
+            phraseWidth = context.measureText(phrase).width;
+          }
+          if (cursor + phraseWidth > right - 7) {
+            fontSize = 8;
             context.font = `700 ${fontSize}px Arial`;
             phraseWidth = context.measureText(phrase).width;
           }
@@ -100,7 +106,18 @@ function showHeart(name) {
           word.style.top = `${y}px`;
           word.style.fontSize = `${fontSize}px`;
           stage.appendChild(word);
+          placed = true;
           cursor += phraseWidth + 14;
+        }
+
+        // Completa as pontas estreitas dos lobos sem forçar uma frase a caber.
+        if (!placed && right - left > 18) {
+          const accent = document.createElement("span");
+          accent.className = "heart-word heart-accent";
+          accent.textContent = "♥";
+          accent.style.left = `${(left + right) / 2}px`;
+          accent.style.top = `${y}px`;
+          stage.appendChild(accent);
         }
       }
     }

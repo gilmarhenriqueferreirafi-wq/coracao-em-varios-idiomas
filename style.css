@@ -58,6 +58,11 @@ body.error-page .not-found {
   text-shadow: 0 0 10px rgba(255, 49, 93, 0.35);
 }
 
+.heart-accent {
+  color: var(--pink-soft);
+  font-size: 0.8rem;
+}
+
 .name-card {
   position: absolute;
   z-index: 3;
