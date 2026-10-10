@@ -35,6 +35,9 @@ function applyTheme(accent, background) {
 }
 
 function animateElement(element, delay, duration = 700) {
+  element.style.opacity = "0";
+  element.style.transform = "translate(-50%, calc(-50% + 12px)) scale(0.96)";
+
   if (typeof element.animate === "function") {
     element.animate([
     { opacity: 0, transform: "translate(-50%, calc(-50% + 12px)) scale(0.96)" },
@@ -48,9 +51,7 @@ function animateElement(element, delay, duration = 700) {
     return;
   }
 
-  element.style.opacity = "0";
   element.style.transition = `opacity ${duration}ms ease-out, transform ${duration}ms ease-out`;
-  element.style.transform = "translate(-50%, calc(-50% + 12px)) scale(0.96)";
   window.setTimeout(() => {
     element.style.opacity = "1";
     element.style.transform = "translate(-50%, -50%) scale(1)";
