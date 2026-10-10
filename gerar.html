@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Criar seu coração</title>
+  <link rel="stylesheet" href="gerador.css?v=3">
+</head>
+<body>
+  <main class="generator" aria-labelledby="title">
+    <section class="hero-copy">
+      <p class="eyebrow"><span class="eyebrow-dot"></span> laboratório de carinho</p>
+      <h1 id="title">Um link.<br><em>Um coração.</em><br>Uma lembrança.</h1>
+      <p class="intro">Monte uma página especial para alguém importante e compartilhe em poucos segundos.</p>
+      <div class="language-strip" aria-hidden="true">
+        <span>Eu te amo</span><span>I love you</span><span>Je t’aime</span><span>愛してる</span>
+      </div>
+    </section>
+
+    <section class="workspace" aria-label="Criador de coração">
+      <div class="preview-shell">
+        <div class="preview-topline"><span>PRÉVIA AO VIVO</span><span class="signal">● ONLINE</span></div>
+        <div class="preview-heart" id="preview-heart" aria-hidden="true">
+          <span>Eu te amo</span><span>I love you</span><span>Te quiero</span><span>Je t’aime</span>
+          <span>Ti amo</span><span>Ich liebe dich</span><span>Te iubesc</span><span>愛してる</span>
+          <span>사랑해</span><span>我爱你</span><span>Я тебя люблю</span><span>Σ’ αγαπώ</span>
+          <span>أحبك</span><span>Te dua</span><span>Seni seviyorum</span><span>我愛你</span>
+          <span>Jag älskar dig</span><span>Jeg elsker deg</span><span>Mi amas vin</span><span>Te quiero</span>
+          <span>Eu te amo</span><span>I love you</span>
+          <div class="preview-card"><small>para</small><strong id="preview-name">alguém especial</strong><p id="preview-message"></p></div>
+        </div>
+        <p class="preview-caption">A prévia muda conforme você personaliza.</p>
+      </div>
+
+      <div class="panel">
+        <div class="panel-heading">
+          <span class="step">01 / 01</span>
+          <h2>Personalize o presente</h2>
+          <p>Você poderá mudar tudo depois usando a URL.</p>
+        </div>
+
+        <form id="generator-form">
+          <label>
+            Nome
+            <input id="name" name="nome" type="text" maxlength="40" placeholder="Ex.: eu mesmo" required>
+          </label>
+
+          <div class="two-columns">
+            <label>
+              Cor do coração
+              <select name="cor">
+                <option value="rosa">Rosa</option>
+                <option value="vermelho">Vermelho</option>
+                <option value="roxo">Roxo</option>
+                <option value="azul">Azul</option>
+                <option value="verde">Verde</option>
+                <option value="dourado">Dourado</option>
+              </select>
+            </label>
+
+            <label>
+              Fundo
+              <select name="fundo">
+                <option value="preto">Preto</option>
+                <option value="rosa">Rosa</option>
+                <option value="roxo">Roxo</option>
+                <option value="azul">Azul</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="two-columns">
+            <label>
+              Tamanho da fonte
+              <select name="fonte">
+                <option value="pequena">Pequena</option>
+                <option value="media" selected>Média</option>
+                <option value="grande">Grande</option>
+              </select>
+            </label>
+
+            <label>
+              Animação
+              <select name="animacao">
+                <option value="sim" selected>Ativada</option>
+                <option value="nao">Desativada</option>
+              </select>
+            </label>
+          </div>
+
+          <label>
+            Mensagem opcional
+            <textarea name="mensagem" maxlength="80" rows="3" placeholder="Uma frase especial"></textarea>
+          </label>
+
+          <button type="submit"><span>Gerar meu link</span><b>↗</b></button>
+        </form>
+
+        <div id="result" class="result" hidden>
+          <label for="generated-url">Seu link está pronto</label>
+          <div class="url-row">
+            <input id="generated-url" type="text" readonly>
+            <button id="copy-url" type="button" class="secondary">Copiar</button>
+          </div>
+          <a id="open-url" class="open-link" href="#">Abrir coração <span>↗</span></a>
+          <p id="copy-status" role="status"></p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="gerador.js?v=3"></script>
+</body>
+</html>
