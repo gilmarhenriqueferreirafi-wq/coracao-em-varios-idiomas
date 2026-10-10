@@ -137,17 +137,18 @@ function showHeart(name, phraseList, options) {
 
   const width = stage.clientWidth;
   const height = stage.clientHeight;
+  const isInstagram = /Instagram/i.test(navigator.userAgent);
   const isMobile = width < 650 || /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent);
-  const batchSize = 28;
+  const batchSize = 30;
   const page = window.__heartPage || 0;
   const displayPhrases = isMobile
     ? phraseList.slice((page * batchSize) % phraseList.length, ((page * batchSize) % phraseList.length) + batchSize)
     : phraseList;
   const visiblePhrases = displayPhrases.length ? displayPhrases : phraseList.slice(0, batchSize);
-  const scale = Math.min(width / (isMobile ? 36 : 30), height / 30);
-  const rowGap = isMobile ? 22 : 19;
+  const scale = Math.min(width / (isInstagram ? 36 : isMobile ? 27 : 30), height / 30);
+  const rowGap = isInstagram ? 22 : isMobile ? 15 : 19;
   const wordGap = isMobile ? 6 : 14;
-  const preferredFontSize = isMobile ? Math.min(options.fontSize, 7) : options.fontSize;
+  const preferredFontSize = isInstagram ? Math.min(options.fontSize, 7) : isMobile ? Math.min(options.fontSize, 8) : options.fontSize;
   const centerX = width / 2;
   const centerY = height / 2 + 18;
   const cardLeft = centerX - card.offsetWidth / 2 - 12;
@@ -165,7 +166,7 @@ function showHeart(name, phraseList, options) {
         : [[rawLeft, rawRight]];
 
       for (const [left, right] of spans) {
-        if (isMobile) {
+        if (isInstagram) {
           if (phraseIndex >= visiblePhrases.length) break;
 
           const phrase = visiblePhrases[phraseIndex++];
@@ -239,7 +240,7 @@ function showHeart(name, phraseList, options) {
     animateElement(card, 4.7, 800);
   }
 
-  if (isMobile && phraseList.length > batchSize) {
+  if (isInstagram && phraseList.length > batchSize) {
     clearTimeout(window.__heartCycleTimer);
     window.__heartCycleTimer = setTimeout(() => {
       window.__heartPage = (page + 1) % Math.ceil(phraseList.length / batchSize);
