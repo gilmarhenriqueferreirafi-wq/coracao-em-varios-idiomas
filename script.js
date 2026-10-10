@@ -59,7 +59,7 @@ function showHeart(name) {
 
   const width = stage.clientWidth;
   const height = stage.clientHeight;
-  const scale = Math.min(width / 32, height / 32);
+  const scale = Math.min(width / 28, height / 28);
   const centerX = width / 2;
   const centerY = height / 2 + 18;
   const cardLeft = centerX - card.offsetWidth / 2 - 12;
