@@ -4,6 +4,36 @@ const fallbackPhrases = [
   "我爱你", "Σ' αγαπώ", "Seni seviyorum", "أحبك"
 ];
 
+const colorBank = {
+  preto: "#050509",
+  rosa: "#ff315d",
+  vermelho: "#ff3b30",
+  roxo: "#b026ff",
+  azul: "#3b82ff",
+  verde: "#22c55e",
+  dourado: "#f5b942"
+};
+
+const fontBank = { pequena: 10, media: 12, grande: 14 };
+
+function resolveColor(value) {
+  if (colorBank[value]) return colorBank[value];
+  if (/^#[\da-f]{6}$/i.test(value)) return value;
+  return null;
+}
+
+function hexToRgba(hex, alpha) {
+  const number = Number.parseInt(hex.slice(1), 16);
+  return `rgba(${number >> 16}, ${(number >> 8) & 255}, ${number & 255}, ${alpha})`;
+}
+
+function applyTheme(accent, background) {
+  const root = document.documentElement;
+  root.style.setProperty("--pink", accent);
+  root.style.setProperty("--pink-soft", accent);
+  root.style.setProperty("--bg-glow", hexToRgba(background, 0.18));
+}
+
 function heartPoint(angle) {
   return {
     x: 16 * Math.sin(angle) ** 3,
@@ -61,15 +91,17 @@ async function loadPhrases() {
   }
 }
 
-function showHeart(name, phraseList) {
+function showHeart(name, phraseList, options) {
   document.title = `${name} — Um coração em vários idiomas`;
   const stage = document.createElement("section");
   stage.className = "stage";
+  if (options.animate) stage.classList.add("is-animated");
 
   const card = document.createElement("div");
   card.className = "name-card";
-  card.innerHTML = `<span></span>`;
+  card.innerHTML = `<span></span>${options.message ? `<p></p>` : ""}`;
   card.querySelector("span").textContent = name;
+  if (options.message) card.querySelector("p").textContent = options.message;
   stage.appendChild(card);
   document.querySelector("#app").replaceChildren(stage);
 
@@ -98,12 +130,12 @@ function showHeart(name, phraseList) {
         let placed = false;
         while (cursor < right - 7) {
           let phrase = phraseList[phraseIndex++ % phraseList.length];
-          let fontSize = 12;
+          let fontSize = options.fontSize;
           context.font = `700 ${fontSize}px Arial`;
           let phraseWidth = context.measureText(phrase).width;
 
           if (cursor + phraseWidth > right - 7) {
-            fontSize = 10;
+            fontSize = Math.max(8, options.fontSize - 2);
             context.font = `700 ${fontSize}px Arial`;
             phraseWidth = context.measureText(phrase).width;
           }
@@ -120,6 +152,9 @@ function showHeart(name, phraseList) {
           word.style.left = `${cursor + phraseWidth / 2}px`;
           word.style.top = `${y}px`;
           word.style.fontSize = `${fontSize}px`;
+          const distance = Math.hypot((cursor + phraseWidth / 2) - centerX, y - centerY);
+          const delay = Math.max(0, (1 - distance / (17 * scale)) * 4.1) + (phraseIndex % 3) * 0.04;
+          word.style.setProperty("--delay", `${delay.toFixed(2)}s`);
           stage.appendChild(word);
           placed = true;
           cursor += phraseWidth + 14;
@@ -143,10 +178,27 @@ function showHeart(name, phraseList) {
   tip.textContent = "♥";
   tip.style.left = `${centerX}px`;
   tip.style.top = `${centerY + scale * 13.3}px`;
+  tip.style.setProperty("--delay", "4.2s");
   stage.appendChild(tip);
+  if (options.animate) card.style.setProperty("--card-delay", "4.7s");
 }
 
-const name = new URLSearchParams(window.location.search).get("nome")?.trim();
-if (name) loadPhrases().then((phraseList) => showHeart(name, phraseList));
-else show404();
+const params = new URLSearchParams(window.location.search);
+const name = params.get("nome")?.trim();
+const accent = resolveColor((params.get("cor") || "rosa").toLowerCase());
+const background = resolveColor((params.get("fundo") || "preto").toLowerCase());
+const fontSize = fontBank[(params.get("fonte") || "media").toLowerCase()];
+const animationValue = (params.get("animacao") || "sim").toLowerCase();
+const message = params.get("mensagem")?.trim() || "";
+
+if (!name || !accent || !background || !fontSize || !["sim", "nao"].includes(animationValue) || message.length > 80) {
+  show404();
+} else {
+  applyTheme(accent, background);
+  loadPhrases().then((phraseList) => showHeart(name, phraseList, {
+    fontSize,
+    message,
+    animate: animationValue === "sim"
+  }));
+}
 
