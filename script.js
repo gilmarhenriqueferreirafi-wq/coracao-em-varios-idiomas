@@ -101,6 +101,7 @@ function show404() {
       <h1>404</h1>
       <p>Este coração precisa de um nome.</p>
       <p>Use uma URL como <code>?nome=Emanuela</code>.</p>
+      <a class="editor-link" href="gerar.html">Criar meu coração <span aria-hidden="true">↗</span></a>
     </section>`;
 }
 
