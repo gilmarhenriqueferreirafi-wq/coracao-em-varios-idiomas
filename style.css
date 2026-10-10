@@ -137,7 +137,7 @@ body.error-page .not-found {
 @media (max-width: 650px) {
   .stage { width: 100vw; height: 72vh; margin-top: 12vh; }
   .heart-word { font-size: 0.55rem; }
-  .name-card { min-width: 145px; width: 42vw; min-height: 100px; padding: 14px; }
+  .name-card { min-width: 140px; width: 38vw; min-height: 94px; padding: 12px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

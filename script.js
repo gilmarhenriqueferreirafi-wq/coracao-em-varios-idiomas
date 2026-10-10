@@ -69,10 +69,10 @@ function heartPoint(angle) {
   };
 }
 
-function heartSpans(y, scale, centerX, centerY) {
+function heartSpans(y, scaleX, scaleY, centerX, centerY) {
   const polygon = Array.from({ length: 720 }, (_, i) => {
     const p = heartPoint((Math.PI * 2 * i) / 720);
-    return { x: centerX + p.x * scale, y: centerY - p.y * scale };
+    return { x: centerX + p.x * scaleX, y: centerY - p.y * scaleY };
   });
   const intersections = [];
 
@@ -141,26 +141,29 @@ function showHeart(name, phraseList, options) {
   const isMobile = width < 650 || /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent);
   const batchSize = 30;
   const page = window.__heartPage || 0;
-  const displayPhrases = isMobile
+  const displayPhrases = isInstagram
     ? phraseList.slice((page * batchSize) % phraseList.length, ((page * batchSize) % phraseList.length) + batchSize)
     : phraseList;
   const visiblePhrases = displayPhrases.length ? displayPhrases : phraseList.slice(0, batchSize);
-  const scale = Math.min(width / (isInstagram ? 36 : isMobile ? 27 : 30), height / 30);
-  const rowGap = isInstagram ? 22 : isMobile ? 15 : 19;
-  const wordGap = isMobile ? 6 : 14;
-  const preferredFontSize = isInstagram ? Math.min(options.fontSize, 7) : isMobile ? Math.min(options.fontSize, 8) : options.fontSize;
+  const scaleX = Math.min(width / (isInstagram ? 36 : isMobile ? 32 : 30), height / 30);
+  const scaleY = scaleX;
+  const rowGap = isInstagram ? 22 : 19;
+  const wordGap = 6;
+  const preferredFontSize = isInstagram ? Math.min(options.fontSize, 7) : isMobile ? Math.min(options.fontSize, 9) : options.fontSize;
   const centerX = width / 2;
   const centerY = height / 2 + 18;
+  const cardCenterY = isMobile ? centerY + 1.75 * scaleY : centerY;
+  if (isMobile && !isInstagram) card.style.top = `${cardCenterY}px`;
   const cardLeft = centerX - card.offsetWidth / 2 - 12;
   const cardRight = centerX + card.offsetWidth / 2 + 12;
-  const cardTop = centerY - card.offsetHeight / 2 - 10;
-  const cardBottom = centerY + card.offsetHeight / 2 + 10;
+  const cardTop = cardCenterY - card.offsetHeight / 2 - 10;
+  const cardBottom = cardCenterY + card.offsetHeight / 2 + 10;
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d");
   let phraseIndex = 0;
 
-  for (let y = centerY - 17 * scale; y <= centerY + 17 * scale; y += rowGap) {
-    for (const [rawLeft, rawRight] of heartSpans(y, scale, centerX, centerY)) {
+  for (let y = centerY - 17 * scaleY; y <= centerY + 17 * scaleY; y += rowGap) {
+    for (const [rawLeft, rawRight] of heartSpans(y, scaleX, scaleY, centerX, centerY)) {
       const spans = y > cardTop && y < cardBottom
         ? [[rawLeft, Math.min(rawRight, cardLeft)], [Math.max(rawLeft, cardRight), rawRight]]
         : [[rawLeft, rawRight]];
@@ -183,7 +186,7 @@ function showHeart(name, phraseList, options) {
           word.style.fontSize = `${fontSize}px`;
           word.style.setProperty("--word-x-scale", Math.max(0.58, xScale).toFixed(3));
           const distance = Math.hypot((left + right) / 2 - centerX, y - centerY);
-          const delay = Math.max(0, (1 - distance / (17 * scale)) * 4.1) + (phraseIndex % 3) * 0.04;
+          const delay = Math.max(0, (1 - distance / (17 * scaleY)) * 4.1) + (phraseIndex % 3) * 0.04;
           word.style.setProperty("--delay", `${delay.toFixed(2)}s`);
           stage.appendChild(word);
           if (options.animate) animateElement(word, delay);
@@ -192,8 +195,8 @@ function showHeart(name, phraseList, options) {
 
         let cursor = left + 7;
         let placedInSpan = false;
-        while (cursor < right - 7 && (!isMobile || !placedInSpan)) {
-          if (isMobile && phraseIndex >= visiblePhrases.length) break;
+        while (cursor < right - 7 && (!isInstagram || !placedInSpan)) {
+          if (isInstagram && phraseIndex >= visiblePhrases.length) break;
           let phrase = visiblePhrases[phraseIndex++ % visiblePhrases.length];
           let fontSize = preferredFontSize;
           context.font = `700 ${fontSize}px Arial`;
@@ -225,7 +228,7 @@ function showHeart(name, phraseList, options) {
           word.style.top = `${y}px`;
           word.style.fontSize = `${fontSize}px`;
           const distance = Math.hypot((cursor + phraseWidth / 2) - centerX, y - centerY);
-          const delay = Math.max(0, (1 - distance / (17 * scale)) * 4.1) + (phraseIndex % 3) * 0.04;
+          const delay = Math.max(0, (1 - distance / (17 * scaleY)) * 4.1) + (phraseIndex % 3) * 0.04;
           word.style.setProperty("--delay", `${delay.toFixed(2)}s`);
           stage.appendChild(word);
           if (options.animate) animateElement(word, delay);
