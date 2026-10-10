@@ -39,8 +39,9 @@ function showHeart(name) {
     const word = document.createElement("span");
     word.className = "heart-word";
     word.textContent = phrases[index++ % phrases.length];
-    word.style.left = `${left}%`;
-    word.style.top = `${top}%`;
+    // Expande o coração sem alterar o espaçamento interno das frases.
+    word.style.left = `${50 + (left - 50) * 1.45}%`;
+    word.style.top = `${50 + (top - 50) * 1.25}%`;
     stage.appendChild(word);
     }
   }
