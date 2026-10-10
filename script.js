@@ -39,7 +39,8 @@ function show404() {
   document.body.classList.add("error-page");
   document.title = "404 — Nome não encontrado";
   document.querySelector("#app").innerHTML = `
-    <section class="not-found">
+    <img class="error-art" src="fundo-404.png" alt="Página 404 romântica com um coração formado por frases">
+    <section class="not-found" aria-label="Página não encontrada">
       <h1>404</h1>
       <p>Este coração precisa de um nome.</p>
       <p>Use uma URL como <code>?nome=Emanuela</code>.</p>
@@ -60,7 +61,7 @@ function showHeart(name) {
 
   const width = stage.clientWidth;
   const height = stage.clientHeight;
-  const scale = Math.min(width / 28, height / 28);
+  const scale = Math.min(width / 31, height / 31);
   const centerX = width / 2;
   const centerY = height / 2 + 18;
   const cardLeft = centerX - card.offsetWidth / 2 - 12;
