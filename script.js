@@ -34,6 +34,19 @@ function applyTheme(accent, background) {
   root.style.setProperty("--bg-glow", hexToRgba(background, 0.18));
 }
 
+function animateElement(element, delay, duration = 700) {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  element.animate([
+    { opacity: 0, transform: "translate(-50%, calc(-50% + 12px)) scale(0.96)" },
+    { opacity: 1, transform: "translate(-50%, -50%) scale(1)" }
+  ], {
+    duration,
+    delay: delay * 1000,
+    easing: "ease-out",
+    fill: "forwards"
+  });
+}
+
 function heartPoint(angle) {
   return {
     x: 16 * Math.sin(angle) ** 3,
@@ -155,6 +168,7 @@ function showHeart(name, phraseList, options) {
           const delay = Math.max(0, (1 - distance / (17 * scale)) * 4.1) + (phraseIndex % 3) * 0.04;
           word.style.setProperty("--delay", `${delay.toFixed(2)}s`);
           stage.appendChild(word);
+          if (options.animate) animateElement(word, delay);
           placed = true;
           cursor += phraseWidth + 14;
         }
@@ -180,10 +194,8 @@ function showHeart(name, phraseList, options) {
   tip.style.setProperty("--delay", "4.2s");
   stage.appendChild(tip);
   if (options.animate) {
-    card.style.setProperty("--card-delay", "4.7s");
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => stage.classList.add("is-animated"));
-    });
+    animateElement(tip, 4.2);
+    animateElement(card, 4.7, 800);
   }
 }
 
