@@ -140,7 +140,6 @@ function showHeart(name, phraseList, options) {
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d");
   let phraseIndex = 0;
-  const lowerTipStart = centerY + scale * 0.62;
 
   for (let y = centerY - 17 * scale; y <= centerY + 17 * scale; y += 19) {
     for (const [rawLeft, rawRight] of heartSpans(y, scale, centerX, centerY)) {
@@ -150,7 +149,6 @@ function showHeart(name, phraseList, options) {
 
       for (const [left, right] of spans) {
         let cursor = left + 7;
-        let placed = false;
         while (cursor < right - 7) {
           let phrase = phraseList[phraseIndex++ % phraseList.length];
           let fontSize = options.fontSize;
@@ -180,31 +178,12 @@ function showHeart(name, phraseList, options) {
           word.style.setProperty("--delay", `${delay.toFixed(2)}s`);
           stage.appendChild(word);
           if (options.animate) animateElement(word, delay);
-          placed = true;
           cursor += phraseWidth + 14;
         }
 
-        // Completa as pontas estreitas dos lobos sem forçar uma frase a caber.
-        if (!placed && right - left > 8 && y < lowerTipStart) {
-          const accent = document.createElement("span");
-          accent.className = "heart-word heart-accent";
-          accent.textContent = "♥";
-          accent.style.left = `${(left + right) / 2}px`;
-          accent.style.top = `${y}px`;
-          stage.appendChild(accent);
-          if (options.animate) animateElement(accent, 3.8);
-        }
       }
     }
   }
-
-  const tip = document.createElement("span");
-  tip.className = "heart-word heart-accent";
-  tip.textContent = "♥";
-  tip.style.left = `${centerX}px`;
-  tip.style.top = `${centerY + scale * 13.3}px`;
-  tip.style.setProperty("--delay", "4.2s");
-  stage.appendChild(tip);
   if (options.animate) {
     animateElement(tip, 4.2);
     animateElement(card, 4.7, 800);
