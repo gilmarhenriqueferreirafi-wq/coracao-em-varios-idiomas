@@ -134,7 +134,11 @@ function showHeart(name, phraseList, options) {
 
   const width = stage.clientWidth;
   const height = stage.clientHeight;
-  const scale = Math.min(width / 30, height / 30);
+  const isMobile = width < 650;
+  const scale = Math.min(width / (isMobile ? 27 : 30), height / 30);
+  const rowGap = isMobile ? 15 : 19;
+  const wordGap = isMobile ? 6 : 14;
+  const preferredFontSize = isMobile ? Math.min(options.fontSize, 8) : options.fontSize;
   const centerX = width / 2;
   const centerY = height / 2 + 18;
   const cardLeft = centerX - card.offsetWidth / 2 - 12;
@@ -145,7 +149,7 @@ function showHeart(name, phraseList, options) {
   const context = canvas.getContext("2d");
   let phraseIndex = 0;
 
-  for (let y = centerY - 17 * scale; y <= centerY + 17 * scale; y += 19) {
+  for (let y = centerY - 17 * scale; y <= centerY + 17 * scale; y += rowGap) {
     for (const [rawLeft, rawRight] of heartSpans(y, scale, centerX, centerY)) {
       const spans = y > cardTop && y < cardBottom
         ? [[rawLeft, Math.min(rawRight, cardLeft)], [Math.max(rawLeft, cardRight), rawRight]]
@@ -155,24 +159,24 @@ function showHeart(name, phraseList, options) {
         let cursor = left + 7;
         while (cursor < right - 7) {
           let phrase = phraseList[phraseIndex++ % phraseList.length];
-          let fontSize = options.fontSize;
+          let fontSize = preferredFontSize;
           context.font = `700 ${fontSize}px Arial`;
           let phraseWidth = context.measureText(phrase).width;
 
           if (cursor + phraseWidth > right - 7) {
-            fontSize = Math.max(8, options.fontSize - 2);
+            fontSize = Math.max(7, preferredFontSize - 2);
             context.font = `700 ${fontSize}px Arial`;
             phraseWidth = context.measureText(phrase).width;
           }
           if (cursor + phraseWidth > right - 7) {
-            fontSize = 8;
+            fontSize = 7;
             context.font = `700 ${fontSize}px Arial`;
             phraseWidth = context.measureText(phrase).width;
           }
           if (cursor + phraseWidth > right - 7) {
             const shortPhrases = ["Te amo", "Ti amo", "Eu te amo"];
             phrase = shortPhrases[phraseIndex++ % shortPhrases.length];
-            fontSize = 8;
+            fontSize = 7;
             context.font = `700 ${fontSize}px Arial`;
             phraseWidth = context.measureText(phrase).width;
           }
@@ -189,7 +193,7 @@ function showHeart(name, phraseList, options) {
           word.style.setProperty("--delay", `${delay.toFixed(2)}s`);
           stage.appendChild(word);
           if (options.animate) animateElement(word, delay);
-          cursor += phraseWidth + 14;
+          cursor += phraseWidth + wordGap;
         }
 
       }
