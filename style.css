@@ -61,7 +61,7 @@ body.error-page .not-found {
 
 .stage.is-animated .heart-word {
   opacity: 0;
-  animation: word-reveal 0.55s ease-out var(--delay, 0s) forwards;
+  animation: word-reveal 0.7s ease-out var(--delay, 0s) forwards;
 }
 
 .heart-accent {

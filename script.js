@@ -95,7 +95,6 @@ function showHeart(name, phraseList, options) {
   document.title = `${name} — Um coração em vários idiomas`;
   const stage = document.createElement("section");
   stage.className = "stage";
-  if (options.animate) stage.classList.add("is-animated");
 
   const card = document.createElement("div");
   card.className = "name-card";
@@ -180,7 +179,12 @@ function showHeart(name, phraseList, options) {
   tip.style.top = `${centerY + scale * 13.3}px`;
   tip.style.setProperty("--delay", "4.2s");
   stage.appendChild(tip);
-  if (options.animate) card.style.setProperty("--card-delay", "4.7s");
+  if (options.animate) {
+    card.style.setProperty("--card-delay", "4.7s");
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => stage.classList.add("is-animated"));
+    });
+  }
 }
 
 const params = new URLSearchParams(window.location.search);
