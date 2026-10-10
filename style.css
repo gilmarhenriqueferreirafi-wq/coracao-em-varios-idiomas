@@ -43,8 +43,8 @@ body.error-page .not-found {
 .stage {
   position: relative;
   width: min(88vw, 760px);
-  height: min(82vh, 680px);
-  margin: 4vh auto;
+  height: min(88vh, 700px);
+  margin: 2vh auto;
 }
 
 .heart-word {

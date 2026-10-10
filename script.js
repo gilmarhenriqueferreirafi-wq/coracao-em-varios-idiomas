@@ -1,4 +1,4 @@
-const phrases = [
+const fallbackPhrases = [
   "Eu te amo", "I love you", "Te quiero", "Je t'aime", "Ti amo",
   "Ich liebe dich", "Te iubesc", "Я тебя люблю", "愛してる", "사랑해",
   "我爱你", "Σ' αγαπώ", "Seni seviyorum", "أحبك"
@@ -47,7 +47,21 @@ function show404() {
     </section>`;
 }
 
-function showHeart(name) {
+async function loadPhrases() {
+  try {
+    const response = await fetch("eu_te_amo_em_varios_idiomas.csv");
+    if (!response.ok) throw new Error("CSV indisponível");
+    const lines = (await response.text()).split(/\r?\n/).slice(1);
+    const loaded = lines
+      .map((line) => line.split(",").slice(1).join(",").trim())
+      .filter(Boolean);
+    return loaded.length ? loaded : fallbackPhrases;
+  } catch {
+    return fallbackPhrases;
+  }
+}
+
+function showHeart(name, phraseList) {
   document.title = `${name} — Um coração em vários idiomas`;
   const stage = document.createElement("section");
   stage.className = "stage";
@@ -61,7 +75,7 @@ function showHeart(name) {
 
   const width = stage.clientWidth;
   const height = stage.clientHeight;
-  const scale = Math.min(width / 31, height / 31);
+  const scale = Math.min(width / 30, height / 30);
   const centerX = width / 2;
   const centerY = height / 2 + 18;
   const cardLeft = centerX - card.offsetWidth / 2 - 12;
@@ -82,7 +96,7 @@ function showHeart(name) {
         let cursor = left + 7;
         let placed = false;
         while (cursor < right - 7) {
-          let phrase = phrases[phraseIndex++ % phrases.length];
+          let phrase = phraseList[phraseIndex++ % phraseList.length];
           let fontSize = 12;
           context.font = `700 ${fontSize}px Arial`;
           let phraseWidth = context.measureText(phrase).width;
@@ -125,5 +139,6 @@ function showHeart(name) {
 }
 
 const name = new URLSearchParams(window.location.search).get("nome")?.trim();
-if (name) showHeart(name); else show404();
+if (name) loadPhrases().then((phraseList) => showHeart(name, phraseList));
+else show404();
 
