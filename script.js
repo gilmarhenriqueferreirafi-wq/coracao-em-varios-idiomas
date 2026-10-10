@@ -86,7 +86,7 @@ function showHeart(name, phraseList) {
   const context = canvas.getContext("2d");
   let phraseIndex = 0;
 
-  for (let y = centerY - 17 * scale; y <= centerY + 17 * scale; y += 28) {
+  for (let y = centerY - 17 * scale; y <= centerY + 17 * scale; y += 23) {
     for (const [rawLeft, rawRight] of heartSpans(y, scale, centerX, centerY)) {
       const spans = y > cardTop && y < cardBottom
         ? [[rawLeft, Math.min(rawRight, cardLeft)], [Math.max(rawLeft, cardRight), rawRight]]
@@ -125,7 +125,7 @@ function showHeart(name, phraseList) {
         }
 
         // Completa as pontas estreitas dos lobos sem forçar uma frase a caber.
-        if (!placed && right - left > 18) {
+        if (!placed && right - left > 8) {
           const accent = document.createElement("span");
           accent.className = "heart-word heart-accent";
           accent.textContent = "♥";
