@@ -192,6 +192,7 @@ function showHeart(name, phraseList, options) {
           accent.style.left = `${(left + right) / 2}px`;
           accent.style.top = `${y}px`;
           stage.appendChild(accent);
+          if (options.animate) animateElement(accent, 3.8);
         }
       }
     }
