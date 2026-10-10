@@ -17,6 +17,18 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+body.error-page {
+  background-color: #050204;
+  background-image: linear-gradient(rgba(5, 2, 4, 0.18), rgba(5, 2, 4, 0.18)), url("fundo-404.png");
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+body.error-page .not-found {
+  display: none;
+}
+
 .stage {
   position: relative;
   width: min(88vw, 760px);

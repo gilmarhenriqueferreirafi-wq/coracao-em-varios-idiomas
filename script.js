@@ -36,6 +36,7 @@ function heartSpans(y, scale, centerX, centerY) {
 }
 
 function show404() {
+  document.body.classList.add("error-page");
   document.title = "404 — Nome não encontrado";
   document.querySelector("#app").innerHTML = `
     <section class="not-found">
