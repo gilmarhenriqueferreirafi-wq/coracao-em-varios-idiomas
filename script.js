@@ -125,6 +125,10 @@ function showHeart(name, phraseList, options) {
   card.innerHTML = `<span></span>${options.message ? `<p></p>` : ""}`;
   card.querySelector("span").textContent = name;
   if (options.message) card.querySelector("p").textContent = options.message;
+  if (options.animate) {
+    card.style.opacity = "0";
+    card.style.transform = "translate(-50%, calc(-50% + 12px)) scale(0.96)";
+  }
   stage.appendChild(card);
   document.querySelector("#app").replaceChildren(stage);
 
@@ -161,6 +165,13 @@ function showHeart(name, phraseList, options) {
             phraseWidth = context.measureText(phrase).width;
           }
           if (cursor + phraseWidth > right - 7) {
+            fontSize = 8;
+            context.font = `700 ${fontSize}px Arial`;
+            phraseWidth = context.measureText(phrase).width;
+          }
+          if (cursor + phraseWidth > right - 7) {
+            const shortPhrases = ["Te amo", "Ti amo", "Eu te amo"];
+            phrase = shortPhrases[phraseIndex++ % shortPhrases.length];
             fontSize = 8;
             context.font = `700 ${fontSize}px Arial`;
             phraseWidth = context.measureText(phrase).width;
