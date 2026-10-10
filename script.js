@@ -163,7 +163,9 @@ function showHeart(name, phraseList, options) {
 
       for (const [left, right] of spans) {
         let cursor = left + 7;
-        while (cursor < right - 7) {
+        let placedInSpan = false;
+        while (cursor < right - 7 && (!isMobile || !placedInSpan)) {
+          if (isMobile && phraseIndex >= visiblePhrases.length) break;
           let phrase = visiblePhrases[phraseIndex++ % visiblePhrases.length];
           let fontSize = preferredFontSize;
           context.font = `700 ${fontSize}px Arial`;
@@ -199,6 +201,7 @@ function showHeart(name, phraseList, options) {
           word.style.setProperty("--delay", `${delay.toFixed(2)}s`);
           stage.appendChild(word);
           if (options.animate) animateElement(word, delay);
+          placedInSpan = true;
           cursor += phraseWidth + wordGap;
         }
 
