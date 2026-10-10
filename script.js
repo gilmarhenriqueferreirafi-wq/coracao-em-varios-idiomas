@@ -92,6 +92,14 @@ function heartSpans(y, scaleX, scaleY, centerX, centerY) {
   return spans;
 }
 
+function addEditorShortcut() {
+  if (document.querySelector(".editor-fallback-wrap, .floating-editor")) return;
+  const wrapper = document.createElement("div");
+  wrapper.className = "editor-fallback-wrap";
+  wrapper.innerHTML = `<a class="editor-link" href="${new URL("gerar.html", window.location.href).href}">Criar meu coração <span aria-hidden="true">↗</span></a>`;
+  document.body.appendChild(wrapper);
+}
+
 function show404() {
   document.body.classList.add("error-page");
   document.title = "404 — Nome não encontrado";
@@ -102,6 +110,7 @@ function show404() {
       <p>Este coração precisa de um nome.</p>
       <p>Use uma URL como <code>?nome=Emanuela</code>.</p>
     </section>`;
+  addEditorShortcut();
 }
 
 async function loadPhrases() {
