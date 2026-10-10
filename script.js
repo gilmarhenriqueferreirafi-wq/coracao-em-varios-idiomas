@@ -135,6 +135,12 @@ function showHeart(name, phraseList, options) {
   const width = stage.clientWidth;
   const height = stage.clientHeight;
   const isMobile = width < 650 || /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent);
+  const batchSize = 30;
+  const page = window.__heartPage || 0;
+  const displayPhrases = isMobile
+    ? phraseList.slice((page * batchSize) % phraseList.length, ((page * batchSize) % phraseList.length) + batchSize)
+    : phraseList;
+  const visiblePhrases = displayPhrases.length ? displayPhrases : phraseList.slice(0, batchSize);
   const scale = Math.min(width / (isMobile ? 27 : 30), height / 30);
   const rowGap = isMobile ? 15 : 19;
   const wordGap = isMobile ? 6 : 14;
@@ -158,7 +164,7 @@ function showHeart(name, phraseList, options) {
       for (const [left, right] of spans) {
         let cursor = left + 7;
         while (cursor < right - 7) {
-          let phrase = phraseList[phraseIndex++ % phraseList.length];
+          let phrase = visiblePhrases[phraseIndex++ % visiblePhrases.length];
           let fontSize = preferredFontSize;
           context.font = `700 ${fontSize}px Arial`;
           let phraseWidth = context.measureText(phrase).width;
@@ -201,6 +207,14 @@ function showHeart(name, phraseList, options) {
   }
   if (options.animate) {
     animateElement(card, 4.7, 800);
+  }
+
+  if (isMobile && phraseList.length > batchSize) {
+    clearTimeout(window.__heartCycleTimer);
+    window.__heartCycleTimer = setTimeout(() => {
+      window.__heartPage = (page + 1) % Math.ceil(phraseList.length / batchSize);
+      showHeart(name, phraseList, options);
+    }, 7500);
   }
 }
 
