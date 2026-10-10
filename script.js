@@ -36,12 +36,15 @@ function applyTheme(accent, background) {
 
 function animateElement(element, delay, duration = 700) {
   element.style.opacity = "0";
-  element.style.transform = "translate(-50%, calc(-50% + 12px)) scale(0.96)";
+  const xScale = element.classList.contains("heart-word")
+    ? "var(--word-x-scale, 1)"
+    : "1";
+  element.style.transform = `translate(-50%, calc(-50% + 12px)) scaleX(${xScale}) scale(0.96)`;
 
   if (typeof element.animate === "function") {
     element.animate([
-    { opacity: 0, transform: "translate(-50%, calc(-50% + 12px)) scale(0.96)" },
-    { opacity: 1, transform: "translate(-50%, -50%) scale(1)" }
+    { opacity: 0, transform: `translate(-50%, calc(-50% + 12px)) scaleX(${xScale}) scale(0.96)` },
+    { opacity: 1, transform: `translate(-50%, -50%) scaleX(${xScale}) scale(1)` }
     ], {
       duration,
       delay: delay * 1000,
@@ -54,7 +57,7 @@ function animateElement(element, delay, duration = 700) {
   element.style.transition = `opacity ${duration}ms ease-out, transform ${duration}ms ease-out`;
   window.setTimeout(() => {
     element.style.opacity = "1";
-    element.style.transform = "translate(-50%, -50%) scale(1)";
+    element.style.transform = `translate(-50%, -50%) scaleX(${xScale}) scale(1)`;
   }, delay * 1000);
 }
 
@@ -135,16 +138,16 @@ function showHeart(name, phraseList, options) {
   const width = stage.clientWidth;
   const height = stage.clientHeight;
   const isMobile = width < 650 || /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent);
-  const batchSize = 30;
+  const batchSize = 28;
   const page = window.__heartPage || 0;
   const displayPhrases = isMobile
     ? phraseList.slice((page * batchSize) % phraseList.length, ((page * batchSize) % phraseList.length) + batchSize)
     : phraseList;
   const visiblePhrases = displayPhrases.length ? displayPhrases : phraseList.slice(0, batchSize);
-  const scale = Math.min(width / (isMobile ? 27 : 30), height / 30);
-  const rowGap = isMobile ? 15 : 19;
+  const scale = Math.min(width / (isMobile ? 36 : 30), height / 30);
+  const rowGap = isMobile ? 22 : 19;
   const wordGap = isMobile ? 6 : 14;
-  const preferredFontSize = isMobile ? Math.min(options.fontSize, 8) : options.fontSize;
+  const preferredFontSize = isMobile ? Math.min(options.fontSize, 7) : options.fontSize;
   const centerX = width / 2;
   const centerY = height / 2 + 18;
   const cardLeft = centerX - card.offsetWidth / 2 - 12;
@@ -162,6 +165,30 @@ function showHeart(name, phraseList, options) {
         : [[rawLeft, rawRight]];
 
       for (const [left, right] of spans) {
+        if (isMobile) {
+          if (phraseIndex >= visiblePhrases.length) break;
+
+          const phrase = visiblePhrases[phraseIndex++];
+          const fontSize = preferredFontSize;
+          context.font = `700 ${fontSize}px Arial`;
+          const phraseWidth = context.measureText(phrase).width;
+          const availableWidth = Math.max(1, right - left - 10);
+          const xScale = Math.min(1, availableWidth / (phraseWidth * 1.18));
+          const word = document.createElement("span");
+          word.className = "heart-word";
+          word.textContent = phrase;
+          word.style.left = `${(left + right) / 2}px`;
+          word.style.top = `${y}px`;
+          word.style.fontSize = `${fontSize}px`;
+          word.style.setProperty("--word-x-scale", Math.max(0.58, xScale).toFixed(3));
+          const distance = Math.hypot((left + right) / 2 - centerX, y - centerY);
+          const delay = Math.max(0, (1 - distance / (17 * scale)) * 4.1) + (phraseIndex % 3) * 0.04;
+          word.style.setProperty("--delay", `${delay.toFixed(2)}s`);
+          stage.appendChild(word);
+          if (options.animate) animateElement(word, delay);
+          continue;
+        }
+
         let cursor = left + 7;
         let placedInSpan = false;
         while (cursor < right - 7 && (!isMobile || !placedInSpan)) {
