@@ -135,6 +135,14 @@ function showHeart(name, phraseList, options) {
   stage.appendChild(card);
   document.querySelector("#app").replaceChildren(stage);
 
+  const editorLink = document.createElement("a");
+  editorLink.className = "floating-editor";
+  editorLink.href = new URL("gerar.html", window.location.href).href;
+  editorLink.title = "Criar outro coração";
+  editorLink.setAttribute("aria-label", "Criar outro coração");
+  editorLink.innerHTML = `<img src="favicon.png" alt="">`;
+  document.querySelector("#app").appendChild(editorLink);
+
   const width = stage.clientWidth;
   const height = stage.clientHeight;
   const compactInstagram = false;

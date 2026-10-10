@@ -104,6 +104,10 @@ body.error-page .not-found {
   text-align: center;
 }
 
+.floating-editor { position: fixed; right: 22px; bottom: 22px; z-index: 20; display: grid; width: 42px; height: 42px; place-items: center; border: 1px solid rgba(255, 132, 157, .7); border-radius: 50%; background: rgba(12, 7, 12, .82); box-shadow: 0 0 18px rgba(255, 49, 93, .28); opacity: .72; transition: opacity .2s, transform .2s, box-shadow .2s; }
+.floating-editor:hover, .floating-editor:focus-visible { opacity: 1; outline: none; box-shadow: 0 0 26px rgba(255, 49, 93, .5); transform: translateY(-2px) scale(1.05); }
+.floating-editor img { width: 25px; height: 25px; object-fit: cover; border-radius: 50%; }
+
 .stage.is-animated .name-card {
   opacity: 0;
   animation: card-reveal 0.8s ease-out var(--card-delay, 4.7s) forwards;
