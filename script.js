@@ -142,7 +142,7 @@ function showHeart(name, phraseList) {
   tip.className = "heart-word heart-accent";
   tip.textContent = "♥";
   tip.style.left = `${centerX}px`;
-  tip.style.top = `${centerY + scale * 11.8}px`;
+  tip.style.top = `${centerY + scale * 13.3}px`;
   stage.appendChild(tip);
 }
 
