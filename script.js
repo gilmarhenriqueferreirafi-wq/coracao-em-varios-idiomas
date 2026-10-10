@@ -10,12 +10,38 @@ function insideHeart(x, y) {
 
 function heartPoints() {
   const points = [];
-  for (let y = 1.15; y >= -1.25; y -= 0.17) {
-    for (let x = -1.45; x <= 1.45; x += 0.22) {
-      if (!insideHeart(x, y)) continue;
-      // Reserva o centro para o cartão com o nome.
-      if (Math.abs(x) < 0.48 && Math.abs(y) < 0.28) continue;
-      points.push({ x, y });
+  let phraseIndex = 0;
+
+  for (let y = 1.12; y >= -1.22; y -= 0.15) {
+    const spans = [];
+    let start = null;
+
+    for (let x = -1.5; x <= 1.5; x += 0.01) {
+      const inside = insideHeart(x, y);
+      if (inside && start === null) start = x;
+      if ((!inside || x >= 1.49) && start !== null) {
+        spans.push([start, inside && x >= 1.49 ? x : x - 0.01]);
+        start = null;
+      }
+    }
+
+    for (const [left, right] of spans) {
+      // Abre espaço para o cartão central sem deixar texto por baixo dele.
+      const pieces = Math.abs(y) < 0.3
+        ? [[left, Math.min(right, -0.5)], [Math.max(left, 0.5), right]]
+        : [[left, right]];
+
+      for (const [pieceLeft, pieceRight] of pieces) {
+        if (pieceRight - pieceLeft < 0.2) continue;
+        let cursor = pieceLeft + 0.02;
+        while (cursor < pieceRight - 0.12) {
+          const phrase = phrases[phraseIndex++ % phrases.length];
+          const width = Math.max(0.19, phrase.length * 0.018);
+          if (cursor + width > pieceRight) break;
+          points.push({ x: cursor + width / 2, y, phrase });
+          cursor += width + 0.08;
+        }
+      }
     }
   }
   return points;
@@ -40,7 +66,7 @@ function showHeart(name) {
   for (const point of heartPoints()) {
     const word = document.createElement("span");
     word.className = "heart-word";
-    word.textContent = phrases[index++ % phrases.length];
+    word.textContent = point.phrase || phrases[index++ % phrases.length];
     word.style.left = `${50 + point.x * 31}%`;
     word.style.top = `${50 - point.y * 35}%`;
     stage.appendChild(word);
