@@ -4,19 +4,36 @@ const phrases = [
   "我爱你", "Σ' αγαπώ", "Seni seviyorum", "أحبك"
 ];
 
-// Posições fixas deixam uma folga real entre frases de tamanhos diferentes.
-const heartLayout = [
-  [18, [39, 61]],
-  [25, [33, 43, 57, 67]],
-  [32, [28, 38, 48, 52, 62, 72]],
-  [39, [25, 35, 45, 55, 65, 75]],
-  [46, [24, 34, 44, 56, 66, 76]],
-  [53, [26, 36, 46, 54, 64, 74]],
-  [60, [30, 40, 50, 60, 70]],
-  [67, [36, 46, 56, 66]],
-  [74, [43, 57]],
-  [81, [50]]
-];
+function heartPoint(angle) {
+  return {
+    x: 16 * Math.sin(angle) ** 3,
+    y: 13 * Math.cos(angle) - 5 * Math.cos(2 * angle)
+      - 2 * Math.cos(3 * angle) - Math.cos(4 * angle)
+  };
+}
+
+function heartSpans(y, scale, centerX, centerY) {
+  const polygon = Array.from({ length: 720 }, (_, i) => {
+    const p = heartPoint((Math.PI * 2 * i) / 720);
+    return { x: centerX + p.x * scale, y: centerY - p.y * scale };
+  });
+  const intersections = [];
+
+  for (let i = 0; i < polygon.length; i += 1) {
+    const a = polygon[i];
+    const b = polygon[(i + 1) % polygon.length];
+    if ((a.y <= y && y < b.y) || (b.y <= y && y < a.y)) {
+      intersections.push(a.x + ((y - a.y) * (b.x - a.x)) / (b.y - a.y));
+    }
+  }
+
+  intersections.sort((a, b) => a - b);
+  const spans = [];
+  for (let i = 0; i + 1 < intersections.length; i += 2) {
+    spans.push([intersections[i], intersections[i + 1]]);
+  }
+  return spans;
+}
 
 function show404() {
   document.title = "404 — Nome não encontrado";
@@ -33,25 +50,59 @@ function showHeart(name) {
   const stage = document.createElement("section");
   stage.className = "stage";
 
-  let index = 0;
-  for (const [top, positions] of heartLayout) {
-    for (const left of positions) {
-    const word = document.createElement("span");
-    word.className = "heart-word";
-    word.textContent = phrases[index++ % phrases.length];
-    // Expande o coração sem alterar o espaçamento interno das frases.
-    word.style.left = `${50 + (left - 50) * 1.45}%`;
-    word.style.top = `${50 + (top - 50) * 1.25}%`;
-    stage.appendChild(word);
-    }
-  }
-
   const card = document.createElement("div");
   card.className = "name-card";
   card.innerHTML = `<span></span>`;
   card.querySelector("span").textContent = name;
   stage.appendChild(card);
   document.querySelector("#app").replaceChildren(stage);
+
+  const width = stage.clientWidth;
+  const height = stage.clientHeight;
+  const scale = Math.min(width / 32, height / 32);
+  const centerX = width / 2;
+  const centerY = height / 2 + 18;
+  const cardLeft = centerX - card.offsetWidth / 2 - 12;
+  const cardRight = centerX + card.offsetWidth / 2 + 12;
+  const cardTop = centerY - card.offsetHeight / 2 - 10;
+  const cardBottom = centerY + card.offsetHeight / 2 + 10;
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
+  let phraseIndex = 0;
+
+  for (let y = centerY - 17 * scale; y <= centerY + 17 * scale; y += 28) {
+    for (const [rawLeft, rawRight] of heartSpans(y, scale, centerX, centerY)) {
+      const spans = y > cardTop && y < cardBottom
+        ? [[rawLeft, Math.min(rawRight, cardLeft)], [Math.max(rawLeft, cardRight), rawRight]]
+        : [[rawLeft, rawRight]];
+
+      for (const [left, right] of spans) {
+        let cursor = left + 7;
+        while (cursor < right - 7) {
+          let phrase = phrases[phraseIndex++ % phrases.length];
+          let fontSize = 12;
+          context.font = `700 ${fontSize}px Arial`;
+          let phraseWidth = context.measureText(phrase).width;
+
+          if (cursor + phraseWidth > right - 7) {
+            fontSize = 10;
+            context.font = `700 ${fontSize}px Arial`;
+            phraseWidth = context.measureText(phrase).width;
+          }
+          if (cursor + phraseWidth > right - 7) break;
+
+          const word = document.createElement("span");
+          word.className = "heart-word";
+          word.textContent = phrase;
+          word.style.left = `${cursor + phraseWidth / 2}px`;
+          word.style.top = `${y}px`;
+          word.style.fontSize = `${fontSize}px`;
+          stage.appendChild(word);
+          cursor += phraseWidth + 14;
+        }
+      }
+    }
+  }
 }
 
 const name = new URLSearchParams(window.location.search).get("nome")?.trim();
