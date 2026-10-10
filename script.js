@@ -196,7 +196,6 @@ function showHeart(name, phraseList, options) {
     }
   }
   if (options.animate) {
-    animateElement(tip, 4.2);
     animateElement(card, 4.7, 800);
   }
 }
