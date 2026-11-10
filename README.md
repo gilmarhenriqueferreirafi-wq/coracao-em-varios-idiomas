@@ -7,7 +7,7 @@ Site estático para GitHub Pages. O coração pode ser personalizado diretamente
 Use o gerador:
 
 ```text
-https://seu-usuario.github.io/seu-repositorio/gerar.html
+[https://seu-usuario.github.io/seu-repositorio/gerar.html](https://gilmarhenriqueferreirafi-wq.github.io/coracao-em-varios-idiomas/gerar.html)
 ```
 
 Ele permite escolher nome, cor, fundo, tamanho da fonte, animação e mensagem.
